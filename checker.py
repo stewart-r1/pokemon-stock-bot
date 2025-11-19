@@ -15,6 +15,8 @@ KEYWORDS = [
     "virtual queue",
     "please wait",
     "Trading",
+    "2025",
+    "Pokemon",
     "we are experiencing high demand",
     # Add or adjust keywords depending on what the queue page shows
 ]
