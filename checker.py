@@ -14,6 +14,7 @@ KEYWORDS = [
     "line",
     "virtual queue",
     "please wait",
+    "Trading",
     "we are experiencing high demand",
     # Add or adjust keywords depending on what the queue page shows
 ]
