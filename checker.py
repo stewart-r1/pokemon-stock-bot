@@ -16,6 +16,7 @@ KEYWORDS = [
     "line",
     "virtual queue",
     "please wait",
+    "Trading",
     # you could also look for specific error or queue-related messages
 ]
 
