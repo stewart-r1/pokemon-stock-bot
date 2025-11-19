@@ -3,7 +3,7 @@ name: Queue-Checker
 # 🔹 Run every minute automatically, plus manual trigger
 on:
   schedule:
-    - cron: "* * * * *"  # every minute (UTC)
+    - cron: "*/5 * * * *"  # every minute (UTC)
   workflow_dispatch:      # allows manual runs for testing
 
 jobs:
