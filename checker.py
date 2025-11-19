@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 # 🔹 Hardcoded Discord webhook URL
 WEBHOOK_URL = "https://discord.com/api/webhooks/1440817160640401519/x1nVjUyCpGfIHiwsExcghKwVy2sf9ASpvrzvgEF0R4-LberFuSS501GhehJztzRFp09a"
 
-# 🔹 Page(s) to monitor
+# 🔹 Page to monitor
 PAGES = {
     "Pokémon Center UK Homepage": "https://www.pokemoncenter.com/en-gb/",
 }
@@ -32,20 +32,18 @@ def check_page(name, url):
     try:
         response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         text = response.text.lower()
-        return any(keyword in text for keyword in KEYWORDS)
+        for keyword in KEYWORDS:
+            if keyword in text:
+                return True
+        return False
     except Exception as e:
         print(f"Error fetching {url}: {e}")
         return False
 
 if __name__ == "__main__":
-    # 🔹 TESTING: Send a message on every run to confirm webhook works
-   ## send_discord("TEST: Hardcoded webhook running!")
-
-    # 🔹 Uncomment the lines below once webhook is confirmed working
-    
+    # 🔹 Loop through pages and check for queue
     for name, url in PAGES.items():
         if check_page(name, url):
             send_discord(f"⚠️ **Queue likely active on** {name}\n{url}")
         else:
-            print(f"{name}: No queue detected.")
-    
+            send_discord(f"✅ **No queue detected on** {name}\n{url}")
