@@ -4,44 +4,42 @@ import os
 
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK")
 
-# Add category pages or product pages you want to monitor
+# Page to monitor: Pokémon Center UK homepage
 PAGES = {
-    "GAME Pokémon Category": "https://www.game.co.uk/en/pokemon-c2422/",
-    "Argos Pokémon Category": "https://www.argos.co.uk/browse/toys/pokemon/c:30359/",
-    "ASDA Pokémon Category": "https://direct.asda.com/george/toys-character/pokemon/pc?p=1",
+    "Pokémon Center UK Homepage": "https://www.pokemoncenter.com/en-gb/"
 }
 
-# Keywords to detect queue or new product availability
+# Keywords likely to appear when the queue is active
 KEYWORDS = [
-    "queue",
     "waiting room",
-    "add to basket",
-    "add to bag",
-    "available for delivery",
-    "available for collection",
+    "queue",
+    "line",
+    "virtual queue",
+    "please wait",
+    # you could also look for specific error or queue-related messages
 ]
 
 def send_discord(message):
-    """Sends alert to Discord."""
+    """Send an alert to Discord."""
     try:
         requests.post(WEBHOOK_URL, json={"content": message})
     except Exception as e:
-        print("Failed to send alert:", e)
+        print("Error sending Discord message:", e)
 
 def check_page(name, url):
-    """Checks if page contains any queue/availability keywords."""
+    """Check if the page contains queue-related text."""
     try:
         response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
-    except:
+    except Exception as e:
+        print(f"Failed to fetch {url}: {e}")
         return False
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    text = soup.get_text().lower()
+    text = response.text.lower()
     return any(keyword in text for keyword in KEYWORDS)
 
 if __name__ == "__main__":
     for name, url in PAGES.items():
         if check_page(name, url):
-            send_discord(f"⚡ QUEUE DETECTED / NEW PRODUCT ON PAGE: **{name}**\n{url}")
+            send_discord(f"⚠️ **Queue likely active on Pokémon Center** → {url}")
         else:
-            print(f"{name} = No queue detected")
+            print(f"{name}: No queue detected.")
